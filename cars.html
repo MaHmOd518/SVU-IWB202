@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="Style.css" />
+    <title>Cars - Option Rental Car</title>
+    <script src="myFunctions.js"></script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="home.html">الصفحة الرئيسية</a></li>
+        <li><a href="cars.html" class="active">السيارات</a></li>
+        <li><a href="aboutus.html">من نحن</a></li>
+      </ul>
+    </nav>
+    <header></header>
+    <main class="cars">
+      <table align="center">
+        <thead>
+          <th>نوع السيارة</th>
+          <th>تاريخ الصنع</th>
+          <th>نوع الايجار</th>
+          <th>قيمة الايجار / متضمنة الضرائب</th>
+          <th>صورة</th>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </main>
+    <script>
+      const tableBody = document.getElementsByTagName("tbody");
+      var htmlTable = "";
+      cars.forEach((car) => {
+        htmlTable += `
+        <tr>
+            <td>${car.make} ${car.model}</td>
+            <td>${car.model_year}</td>
+            <td>${car.rental_type}</td>
+            <td>${calcFinalRent(car.rent_value)} ل.س</td>
+            <td>
+              <a href="details.html?id=${car.id}" target="_top">
+                <img src="${car.image}" />
+              </a>
+            </td>
+          </tr>
+          `;
+      });
+      tableBody[0].innerHTML = htmlTable;
+    </script>
+  </body>
+</html>

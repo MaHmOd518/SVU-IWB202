@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="Style.css" />
+  <title>Cars - Option Rental Car</title>
+  <script src="myFunctions.js"></script>
+  <style>
+    .car-listing {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      background-color: rgba(255, 255, 255, 0.678);
+      padding: 20px;
+      justify-content: space-evenly;
+      width: 100%;
+    }
+
+    @media (max-width:992px) {
+      .car-listing {
+        flex-direction: column-reverse;
+      }
+    }
+
+    .car-listing img {
+      width: 300px;
+      height: auto;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+
+    .car-listing h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .car-listing ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    .car-listing li {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 5px;
+    }
+
+    .car-listing li strong {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    #final_rent {
+      font-weight: bold;
+      color: #9292f3;
+    }
+
+    .action {
+      padding: 10px;
+      min-width: 80px;
+      background-color: #006b6e;
+      text-align: center;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .actions {
+      width: 30%;
+      margin: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .captchabtn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 80%;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+  <script>
+    function removeSpaces(string) {
+      return string.split(' ').join('');
+    }
+
+    function Captcha() {
+      var alpha = new Array(
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z"
+      );
+      var i;
+      for (i = 0; i < 6; i++) {
+        var a = alpha[Math.floor(Math.random() * alpha.length)];
+        var b = alpha[Math.floor(Math.random() * alpha.length)];
+        var c = alpha[Math.floor(Math.random() * alpha.length)];
+        var d = alpha[Math.floor(Math.random() * alpha.length)];
+        var e = alpha[Math.floor(Math.random() * alpha.length)];
+        var f = alpha[Math.floor(Math.random() * alpha.length)];
+        var g = alpha[Math.floor(Math.random() * alpha.length)];
+      }
+      var code =
+        a + " " + b + " " + " " + c + " " + d + " " + e + " " + f + " " + g;
+      document.getElementById("mainCaptcha").innerText = code;
+    }
+
+    function ValidCaptcha() {
+      var string1 = removeSpaces(
+        document.getElementById("mainCaptcha").innerText
+      );
+      var string2 = removeSpaces(document.getElementById("txtInput").value);
+      if (string1 == string2) {
+        document.getElementById('errcaptcha').innerHTML = ''
+        return true;
+      } else {
+        document.getElementById('errcaptcha').innerHTML = 'رمز التحقق غير متطابق!'
+        return false;
+      }
+    }
+  </script>
+</head>
+
+<body onload="Captcha()">
+  <nav class="navbar">
+    <ul>
+      <li><a href="home.html">الصفحة الرئيسية</a></li>
+      <li><a href="cars.html" class="active">السيارات</a></li>
+      <li><a href="aboutus.html">من نحن</a></li>
+    </ul>
+  </nav>
+  <header></header>
+  <main>
+    <div id="detail"></div>
+    <div class="table">
+      <table style="min-width: 500px;">
+        <thead>
+          <th>قيمة الإيجار النهائي: <span id="final_rent"></span></th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>قيمة الإيجار: <span id="rent_value"></span></td>
+          </tr>
+          <tr>
+            <td>ضريبة: <span id="tax"></span></td>
+          </tr>
+          <tr>
+            <td>رسم اعادة اعمار: <span id="fee"></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="actions">
+      <button class="action" onclick="window.location.href = '/cars.html'">الغاء</button>
+      <label class="action" for="continue">متابعة
+        <input id="continue" type="checkbox" />
+      </label>
+    </div>
+    <div id="form" style="display: none;">
+      <form>
+        <div style="width: 96%">
+          <h1>تقديم طلب إيجار</h1>
+          <p>يرجى ملئ الخانات التالية</p>
+          <hr />
+          <div class="inputs">
+
+            <div style="width: 50%;">
+
+              <label for="الاسم الكامل"><b>الاسم الكامل</b></label>
+              <input type="text" placeholder=" الاسم الكامل" name="username" id="username" placeholder="الاسم الكامل"
+                required />
+              <div class="error" id="errname"></div>
+
+              <label for="الرقم الوطني"><b>الرقم الوطني</b></label>
+              <input type="text" placeholder="dddd-dddd-ddd" name="NumID" id="NumID" min="11" maxlength="13" required />
+              <div class="error" id="errnumid"></div>
+
+              <label for="تاريخ الولادة"><b>تاريخ الولادة</b></label>
+              <input type="text" placeholder="DD-MM-YYYY" name="birthday" id="birthday" maxlength="10" required />
+              <div class="error" id="errbirthday"></div>
+
+              <label for="رقم الموبايل"><b>رقم الموبايل</b></label>
+              <input type="text" placeholder="09XXXXXXXX" name="Number" id="Number" required maxlength="10" />
+              <div class="error" id="errnumber"></div>
+
+            </div>
+            <div style="width: 50%;">
+
+              <label for="الايميل"><b>الايميل</b></label>
+              <input type="text" placeholder="examples@gmail.com" name="Email" id="Email" required />
+              <div class="error" id="erremail"></div>
+
+              <label for="مدة الايجار">
+                <b>(حسب نوع الايجار) مدة الايجار</b>
+              </label>
+              <input type="number" name="period" id="period" required maxlength="10" min="1" />
+              <div class="error" id="errperiod"></div>
+
+              <div>
+                <label><b>رمز التحقق</b></label>
+                <div class="captchabtn">
+                  <span id="mainCaptcha"></span>
+                  <input class="action" type="button" id="refresh" value="reCaptcha" onclick="Captcha();" />
+                </div>
+                <input type="text" id="txtInput" placeholder="يرجى ادخال الرمز" required />
+                <div class="error" id="errcaptcha"></div>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix">
+            <button class="Add" value="تقديم الطلب">
+              تقديم الطلب
+              </input>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+</body>
+<script>
+  const id = new URLSearchParams(window.location.search).get("id");
+  const carDetails = cars.filter((car) => car.id == id)[0];
+  document.getElementById("detail").innerHTML = `
+    <div class="car-listing">
+      <div>
+        <h2>${carDetails.make} ${carDetails.model}</h2>
+        <ul>
+          <div>
+            <li><strong>صنع:</strong> ${carDetails.make}</li>
+            <li><strong>نموذج:</strong> ${carDetails.model}</li>
+            <li><strong>سنة الصنع:</strong> ${carDetails.model_year}</li>
+            <li><strong>نوع الجسم:</strong> ${carDetails.body_type}</li>
+            <li><strong>جهاز نقل الحركة:</strong> ${carDetails.transmission}</li>
+            </div>
+          
+          <div>
+            <li><strong>نوع الوقود:</strong> ${carDetails.fuel_type}</li>
+            <li><strong>محرك:</strong> ${carDetails.engine}</li>
+            <li><strong>نوع الإيجار:</strong> ${carDetails.rental_type}</li>
+            <li><strong>قيمة الإيجار:</strong> ${carDetails.rent_value} ل.س</li>
+            <li><strong>ميزات:</strong> ${carDetails.features.join(", ")}</li>
+            </div>
+            </ul>
+  </div>
+          <img src="${carDetails.image}" alt="${carDetails.model}">
+</div>
+    `;
+  document.getElementById("final_rent").innerHTML =
+    calcFinalRent(carDetails.rent_value) + " ل.س";
+  document.getElementById("rent_value").innerHTML =
+    carDetails.rent_value + " ل.س";
+  document.getElementById("tax").innerHTML =
+    (carDetails.rent_value * 5) / 100 + " ل.س";
+  document.getElementById("fee").innerHTML =
+    (carDetails.rent_value * 1) / 100 + " ل.س";
+
+  const proceed = document.getElementById("continue");
+  proceed.addEventListener("click", (e) => {
+    if (e.target.checked) {
+      document.getElementById('form').style.display = 'block';
+      proceed.setAttribute('disabled')
+    }
+  });
+
+  const form = document.querySelector('#form form');
+
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (validateName() &&
+      validateNumID() &&
+      validateNumber() &&
+      validateDate() &&
+      validateEmail() &&
+      validatePeriod() &&
+      ValidCaptcha()) {
+      const period = document.getElementById('period').value
+      alert(`قيمة الايجار النهائية: ${calcFinalRent(carDetails.rent_value * period)} ل.س`)
+      window.location.href = '/cars.html'
+    }
+  }
+  )
+
+  function validateName() {
+    const nameInput = document.getElementById('username');
+    const nameValue = nameInput.value;
+
+    if (nameValue.match(/^[\u0621-\u064A\u0660-\u0669\s]+$/)) {
+      document.getElementById('errname').innerHTML = ''
+      return true
+    } else {
+      document.getElementById('errname').innerHTML = 'الاسم غير صالح!'
+      return false
+    }
+  }
+  function validatePeriod() {
+    const nameInput = document.getElementById('period');
+    const nameValue = nameInput.value;
+
+    if (nameValue) {
+      document.getElementById('errperiod').innerHTML = ''
+      return true
+    } else {
+      document.getElementById('errperiod').innerHTML = 'المدة غير صالحة!'
+      return false
+    }
+  }
+  function validateNumID() {
+    const nameInput = document.getElementById('NumID');
+    const nameValue = nameInput.value;
+
+    if (nameValue.match(/^01|02|03|04|05|06|07|08|14|13|12|11|10|09[0-9]{9}$/) || nameValue.length !== 11) {
+      document.getElementById('errnumid').innerHTML = ''
+      return true
+    } else {
+      document.getElementById('errnumid').innerHTML = 'الرقم الوطني غير صالح!'
+      return false
+    }
+  }
+  function validateNumber() {
+    const nameInput = document.getElementById('Number');
+    const nameValue = nameInput.value;
+
+    if (nameValue.match(/^[0][9][^0127]\d{7}$/)) {
+      document.getElementById('errnumber').innerHTML = ''
+      return true
+    } else {
+      document.getElementById('errnumber').innerHTML = 'رقم الموبايل غير صالح!'
+      return false
+    }
+  }
+  function validateDate() {
+    const nameInput = document.getElementById('birthday');
+    const nameValue = nameInput.value;
+
+    if (nameValue.match(/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$/)) {
+      document.getElementById('errbirthday').innerHTML = ''
+      return true
+    } else {
+      document.getElementById('errbirthday').innerHTML = 'التاريخ غير صالح!'
+      return false
+    }
+  }
+
+  function validateEmail() {
+    const emailInput = document.getElementById('Email');
+    const emailValue = emailInput.value;
+
+    if (emailValue.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+      document.getElementById('erremail').innerHTML = ''
+      return true
+    } else {
+      document.getElementById('erremail').innerHTML = 'الايميل غير صالح!'
+      return false
+    }
+  }
+
+</script>
+
+</html>
